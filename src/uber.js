@@ -7,7 +7,70 @@ import CityPin from './city-pin'
 import bartStations from './bart-station.json';
 import MARKER_STYLE from './marker-style';
 import {json as requestJson} from 'd3-request';
-import DropDown from './dropdown';
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+import Iframe from 'react-iframe'
+
+const  useStyles = makeStyles({
+  root: {
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
+  icon: {
+    borderRadius: '50%',
+    width: 16,
+    height: 16,
+    boxShadow: 'inset 0 0 0 1px rgba(16,22,26,.2), inset 0 -1px 0 rgba(16,22,26,.1)',
+    backgroundColor: '#f5f8fa',
+    backgroundImage: 'linear-gradient(180deg,hsla(0,0%,100%,.8),hsla(0,0%,100%,0))',
+    '$root.Mui-focusVisible &': {
+      outline: '2px auto rgba(19,124,189,.6)',
+      outlineOffset: 2,
+    },
+    'input:hover ~ &': {
+      backgroundColor: '#ebf1f5',
+    },
+    'input:disabled ~ &': {
+      boxShadow: 'none',
+      background: 'rgba(206,217,224,.5)',
+    },
+  },
+  checkedIcon: {
+    backgroundColor: '#137cbd',
+    backgroundImage: 'linear-gradient(180deg,hsla(0,0%,100%,.1),hsla(0,0%,100%,0))',
+    '&:before': {
+      display: 'block',
+      width: 16,
+      height: 16,
+      backgroundImage: 'radial-gradient(#fff,#fff 28%,transparent 32%)',
+      content: '""',
+    },
+    'input:hover ~ &': {
+      backgroundColor: '#106ba3',
+    },
+  },
+});
+
+function StyledRadio(props){
+  const classes = useStyles();
+
+  return (
+    <Radio
+      className={classes.root}
+      disableRipple
+      color="default"
+      checkedIcon={<span className={clsx(classes.icon, classes.checkedIcon)} />}
+      icon={<span className={classes.icon} />}
+      {...props}
+    />
+  );
+}
 
 class Map extends Component {
 
@@ -19,7 +82,9 @@ class Map extends Component {
       longitude: 77.57733,
       zoom: 8,
     },
+    showm:{disp:'none'}
   };
+  
 
   _loadData = (map,data) => {
     map.addLayer(data)
@@ -2240,6 +2305,64 @@ class Map extends Component {
     );
   };
 
+  _rendermap = (info) => {
+    const map = this.reactMap.getMap();
+
+    map.removeLayer('jpnagar')
+
+    map.addLayer({
+      "id": "route",
+      "type": "line",
+      "source": {
+      "type": "geojson",
+      "data": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+      "type": "LineString",
+      "coordinates": [
+          [
+            77.66932725906372,
+            12.990162631622217
+          ],
+          [
+            77.66930580139159,
+            12.990852612543895
+          ],
+          [
+            77.66868352890015,
+            12.990842158301806
+          ],
+          [
+            77.6674497127533,
+            12.993277984813618
+          ],
+          [
+            77.6671814918518,
+            12.994271126105149
+          ],
+          [
+            77.66663432121277,
+            12.995588338952796
+          ]
+        ]
+      }
+      }
+      },
+      "layout": {
+      "line-join": "round",
+      "line-cap": "round"
+      },
+      "paint": {
+      "line-color": "#888",
+      "line-width": 8,
+      }
+      });
+      this.setState({showm:{disp:'block'}})
+    alert(info)
+
+  }
+
   _renderPopup() {
     const {popupInfo} = this.state;
 
@@ -2262,7 +2385,15 @@ class Map extends Component {
   render() {
     return (
         <div>
-              <DropDown data={this.reactMap}/>
+               <FormControl component="fieldset">
+      <FormLabel component="legend">Options</FormLabel>
+      <RadioGroup defaultValue="female" aria-label="options" name="customized-radios" onChange={(event)=>this._rendermap(event.target.value)}>
+        <FormControlLabel value="Female" control={<StyledRadio />} label="Female" />
+        <FormControlLabel value="Senior Citizen" control={<StyledRadio />} label="Senior citizen" />
+        <FormControlLabel value="Crime Rate" control={<StyledRadio />} label="Crime rate" />
+        <FormControlLabel value="Hospitals" control={<StyledRadio />} label="Hospitals" />
+      </RadioGroup>
+    </FormControl>
       <ReactMapGL
       ref={(reactMap) => this.reactMap = reactMap}
       mapboxApiAccessToken={"pk.eyJ1IjoibmltaXNoYm9uZ2FsZSIsImEiOiJjazNrOHd5NHgwOHhqM2xwOWk3MjhncndhIn0.QYVzDZcRD_w4d70I5kLUIA"}
@@ -2279,11 +2410,14 @@ class Map extends Component {
         <div style={{position: 'absolute', right: 0}}>
           <NavigationControl />
         </div>
-        <div style={{position: 'absolute', right: 0}}>
-          <FullscreenControl container={document.querySelector('body')}/>
-        </div>
     </ReactMapGL>
-  
+    <Iframe url="http://www.youtube.com/embed/xDMP3i36naA"
+        width="450px"
+        height="450px"
+        id="myId"
+        className="myClassname"
+        display={this.state.showm.disp}
+        position="relative"/>
     </div>
       );
   }

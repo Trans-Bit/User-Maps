@@ -70,6 +70,7 @@ export default function CustomizedRadios() {
       <FormLabel component="legend">Options</FormLabel>
       <RadioGroup defaultValue="female" aria-label="options" name="customized-radios" onChange={(event)=>{
           alert(event.target.value)
+          alert(this.props.data)
       }}>
         <FormControlLabel value="Female" control={<StyledRadio />} label="Female" />
         <FormControlLabel value="Senior Citizen" control={<StyledRadio />} label="Senior citizen" />
