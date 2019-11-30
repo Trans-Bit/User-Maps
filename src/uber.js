@@ -1,91 +1,58 @@
 import React,{Component} from 'react';
 import MAP_STYLE from './map-style-v8.json';
-import ReactMapGL, {Marker, Popup, NavigationControl, FullscreenControl} from 'react-map-gl';
+import MAP_STYLE1 from './satellite-v9.json'
+import MAP_STYLE2 from './bright-v9.json'
+import MAP_STYLE3 from './empty-v9.json'
+import ReactMapGL, {Marker, Popup, NavigationControl } from 'react-map-gl';
 import CITIES from './markers.json';
 import CityInfo from './city-info'
 import CityPin from './city-pin'
 import bartStations from './bart-station.json';
 import MARKER_STYLE from './marker-style';
 import {json as requestJson} from 'd3-request';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
 import Iframe from 'react-iframe'
+import { makeStyles } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
 
-const  useStyles = makeStyles({
-  root: {
-    '&:hover': {
-      backgroundColor: 'transparent',
-    },
+const useStyles = makeStyles(theme => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
   },
-  icon: {
-    borderRadius: '50%',
-    width: 16,
-    height: 16,
-    boxShadow: 'inset 0 0 0 1px rgba(16,22,26,.2), inset 0 -1px 0 rgba(16,22,26,.1)',
-    backgroundColor: '#f5f8fa',
-    backgroundImage: 'linear-gradient(180deg,hsla(0,0%,100%,.8),hsla(0,0%,100%,0))',
-    '$root.Mui-focusVisible &': {
-      outline: '2px auto rgba(19,124,189,.6)',
-      outlineOffset: 2,
-    },
-    'input:hover ~ &': {
-      backgroundColor: '#ebf1f5',
-    },
-    'input:disabled ~ &': {
-      boxShadow: 'none',
-      background: 'rgba(206,217,224,.5)',
-    },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
   },
-  checkedIcon: {
-    backgroundColor: '#137cbd',
-    backgroundImage: 'linear-gradient(180deg,hsla(0,0%,100%,.1),hsla(0,0%,100%,0))',
-    '&:before': {
-      display: 'block',
-      width: 16,
-      height: 16,
-      backgroundImage: 'radial-gradient(#fff,#fff 28%,transparent 32%)',
-      content: '""',
-    },
-    'input:hover ~ &': {
-      backgroundColor: '#106ba3',
-    },
-  },
-});
+}));
 
-function StyledRadio(props){
-  const classes = useStyles();
-
-  return (
-    <Radio
-      className={classes.root}
-      disableRipple
-      color="default"
-      checkedIcon={<span className={clsx(classes.icon, classes.checkedIcon)} />}
-      icon={<span className={classes.icon} />}
-      {...props}
-    />
-  );
-}
 
 class Map extends Component {
 
-  state = {
-    viewport: {
-      width: 1200,
-      height: 700,
-      latitude: 12.974922,
-      longitude: 77.57733,
-      zoom: 8,
-    },
-    showm:{disp:'none'}
-  };
+  constructor(props) {
+    super(props)
+    this.state= {
+      viewport: {
+        width: 1200,
+        height: 550,
+        latitude: 12.974922,
+        longitude: 77.57733,
+        zoom: 9,
+      },
+      showm:{disp:'none'},
+      mapstyle:"",
+      category:"",
+      mark:""
+    };
+    this.setState=this.setState.bind(this)
+  }
   
-
   _loadData = (map,data) => {
     map.addLayer(data)
   };
@@ -145,7 +112,7 @@ class Map extends Component {
                 }},'layout': {},
                 'paint': {
                 'fill-color': '#088',
-                'fill-opacity': 0.8
+                'fill-opacity': 0.4
                 }
                 });
 
@@ -203,7 +170,7 @@ class Map extends Component {
                 }},'layout': {},
                 'paint': {
                 'fill-color': '#088',
-                'fill-opacity': 0.8
+                'fill-opacity': 0.4
                 }
                 });
 
@@ -256,7 +223,7 @@ class Map extends Component {
                     }},'layout': {},
                     'paint': {
                     'fill-color': '#088',
-                    'fill-opacity': 0.8
+                    'fill-opacity': 0.4
                     }
                     });
 
@@ -309,7 +276,7 @@ class Map extends Component {
                         }},'layout': {},
                         'paint': {
                         'fill-color': '#088',
-                        'fill-opacity': 0.8
+                        'fill-opacity': 0.4
                         }
                         });
 
@@ -358,7 +325,7 @@ class Map extends Component {
                             }},'layout': {},
                             'paint': {
                             'fill-color': '#088',
-                            'fill-opacity': 0.8
+                            'fill-opacity': 0.4
                             }
                             });
 
@@ -428,7 +395,7 @@ class Map extends Component {
                             }},'layout': {},
                             'paint': {
                             'fill-color': '#088',
-                            'fill-opacity': 0.8
+                            'fill-opacity': 0.4
                             }
                             });
 
@@ -477,7 +444,7 @@ class Map extends Component {
                             }},'layout': {},
                             'paint': {
                             'fill-color': '#088',
-                            'fill-opacity': 0.8
+                            'fill-opacity': 0.4
                             }
                             });
 
@@ -526,7 +493,7 @@ class Map extends Component {
                                 }},'layout': {},
                                 'paint': {
                                 'fill-color': '#088',
-                                'fill-opacity': 0.8
+                                'fill-opacity': 0.4
                                 }
                                 });
 
@@ -588,7 +555,7 @@ class Map extends Component {
                                     }},'layout': {},
                                     'paint': {
                                     'fill-color': '#088',
-                                    'fill-opacity': 0.8
+                                    'fill-opacity': 0.4
                                     }
                                     });
 
@@ -642,7 +609,7 @@ class Map extends Component {
                                         }},'layout': {},
                                         'paint': {
                                         'fill-color': '#088',
-                                        'fill-opacity': 0.8
+                                        'fill-opacity': 0.4
                                         }
                                         });
 
@@ -704,7 +671,7 @@ class Map extends Component {
                                             }},'layout': {},
                                             'paint': {
                                             'fill-color': '#088',
-                                            'fill-opacity': 0.8
+                                            'fill-opacity': 0.4
                                             }
                                             });
 
@@ -758,7 +725,7 @@ class Map extends Component {
                                                 }},'layout': {},
                                                 'paint': {
                                                 'fill-color': '#088',
-                                                'fill-opacity': 0.8
+                                                'fill-opacity': 0.4
                                                 }
                                                 });
 
@@ -824,7 +791,7 @@ class Map extends Component {
                                                     }},'layout': {},
                                                     'paint': {
                                                     'fill-color': '#088',
-                                                    'fill-opacity': 0.8
+                                                    'fill-opacity': 0.4
                                                     }
                                                     });
 
@@ -878,7 +845,7 @@ class Map extends Component {
                                                         }},'layout': {},
                                                         'paint': {
                                                         'fill-color': '#088',
-                                                        'fill-opacity': 0.8
+                                                        'fill-opacity': 0.4
                                                         }
                                                         });
                                                         map.addLayer( {
@@ -938,7 +905,7 @@ class Map extends Component {
                                                             }},'layout': {},
                                                             'paint': {
                                                             'fill-color': '#088',
-                                                            'fill-opacity': 0.8
+                                                            'fill-opacity': 0.4
                                                             }
                                                             });
 
@@ -987,7 +954,7 @@ class Map extends Component {
                                                                 }},'layout': {},
                                                                 'paint': {
                                                                 'fill-color': '#088',
-                                                                'fill-opacity': 0.8
+                                                                'fill-opacity': 0.4
                                                                 }
                                                                 });
 
@@ -1036,7 +1003,7 @@ class Map extends Component {
                                                                     }},'layout': {},
                                                                     'paint': {
                                                                     'fill-color': '#088',
-                                                                    'fill-opacity': 0.8
+                                                                    'fill-opacity': 0.4
                                                                     }
                                                                     });
 
@@ -1097,7 +1064,7 @@ class Map extends Component {
                                                                         }},'layout': {},
                                                                         'paint': {
                                                                         'fill-color': '#088',
-                                                                        'fill-opacity': 0.8
+                                                                        'fill-opacity': 0.4
                                                                         }
                                                                         });
 
@@ -1158,7 +1125,7 @@ class Map extends Component {
                                                                             }},'layout': {},
                                                                             'paint': {
                                                                             'fill-color': '#088',
-                                                                            'fill-opacity': 0.8
+                                                                            'fill-opacity': 0.4
                                                                             }
                                                                             });
                                                                             map.addLayer( {
@@ -1210,7 +1177,7 @@ class Map extends Component {
                                                                                 }},'layout': {},
                                                                                 'paint': {
                                                                                 'fill-color': '#088',
-                                                                                'fill-opacity': 0.8
+                                                                                'fill-opacity': 0.4
                                                                                 }
                                                                                 });
 
@@ -1263,7 +1230,7 @@ class Map extends Component {
                                                                                     }},'layout': {},
                                                                                     'paint': {
                                                                                     'fill-color': '#088',
-                                                                                    'fill-opacity': 0.8
+                                                                                    'fill-opacity': 0.4
                                                                                     }
                                                                                     });
 
@@ -1316,7 +1283,7 @@ class Map extends Component {
                                                                                         }},'layout': {},
                                                                                         'paint': {
                                                                                         'fill-color': '#088',
-                                                                                        'fill-opacity': 0.8
+                                                                                        'fill-opacity': 0.4
                                                                                         }
                                                                                         });
 
@@ -1369,7 +1336,7 @@ class Map extends Component {
                                                                                             }},'layout': {},
                                                                                             'paint': {
                                                                                             'fill-color': '#088',
-                                                                                            'fill-opacity': 0.8
+                                                                                            'fill-opacity': 0.4
                                                                                             }
                                                                                             });
 
@@ -1430,7 +1397,7 @@ class Map extends Component {
                                                                                                 }},'layout': {},
                                                                                                 'paint': {
                                                                                                 'fill-color': '#088',
-                                                                                                'fill-opacity': 0.8
+                                                                                                'fill-opacity': 0.4
                                                                                                 }
                                                                                                 });
 
@@ -1499,7 +1466,7 @@ class Map extends Component {
                                                                                                     }},'layout': {},
                                                                                                     'paint': {
                                                                                                     'fill-color': '#088',
-                                                                                                    'fill-opacity': 0.8
+                                                                                                    'fill-opacity': 0.4
                                                                                                     }
                                                                                                     });
 
@@ -1552,7 +1519,7 @@ class Map extends Component {
                                                                                                         }},'layout': {},
                                                                                                         'paint': {
                                                                                                         'fill-color': '#088',
-                                                                                                        'fill-opacity': 0.8
+                                                                                                        'fill-opacity': 0.4
                                                                                                         }
                                                                                                         });
     
@@ -1611,7 +1578,7 @@ class Map extends Component {
                                                                                                             }},'layout': {},
                                                                                                             'paint': {
                                                                                                             'fill-color': '#088',
-                                                                                                            'fill-opacity': 0.8
+                                                                                                            'fill-opacity': 0.4
                                                                                                             }
                                                                                                             });
 
@@ -1677,7 +1644,7 @@ class Map extends Component {
                                                                                                         }},'layout': {},
                                                                                                         'paint': {
                                                                                                         'fill-color': '#088',
-                                                                                                        'fill-opacity': 0.8
+                                                                                                        'fill-opacity': 0.4
                                                                                                         }
                                                                                                         });
 
@@ -1743,7 +1710,7 @@ class Map extends Component {
                                                                                                         }},'layout': {},
                                                                                                         'paint': {
                                                                                                         'fill-color': '#088',
-                                                                                                        'fill-opacity': 0.8
+                                                                                                        'fill-opacity': 0.4
                                                                                                         }
                                                                                                         });
 
@@ -1793,7 +1760,7 @@ class Map extends Component {
                                                                                                         }},'layout': {},
                                                                                                         'paint': {
                                                                                                         'fill-color': '#088',
-                                                                                                        'fill-opacity': 0.8
+                                                                                                        'fill-opacity': 0.4
                                                                                                         }
                                                                                                         });
 
@@ -1855,7 +1822,7 @@ class Map extends Component {
                                                                                                         }},'layout': {},
                                                                                                         'paint': {
                                                                                                         'fill-color': '#088',
-                                                                                                        'fill-opacity': 0.8
+                                                                                                        'fill-opacity': 0.4
                                                                                                         }
                                                                                                         });
 
@@ -1908,7 +1875,7 @@ class Map extends Component {
                                                                                                             }},'layout': {},
                                                                                                             'paint': {
                                                                                                             'fill-color': '#088',
-                                                                                                            'fill-opacity': 0.8
+                                                                                                            'fill-opacity': 0.4
                                                                                                             }
                                                                                                             });
 
@@ -1957,7 +1924,7 @@ class Map extends Component {
                                                                                                                 }},'layout': {},
                                                                                                                 'paint': {
                                                                                                                 'fill-color': '#088',
-                                                                                                                'fill-opacity': 0.8
+                                                                                                                'fill-opacity': 0.4
                                                                                                                 }
                                                                                                                 });
 
@@ -2010,7 +1977,7 @@ class Map extends Component {
                                                                                                                     }},'layout': {},
                                                                                                                     'paint': {
                                                                                                                     'fill-color': '#088',
-                                                                                                                    'fill-opacity': 0.8
+                                                                                                                    'fill-opacity': 0.4
                                                                                                                     }
                                                                                                                     });
 
@@ -2067,7 +2034,7 @@ class Map extends Component {
                                                                                                                         }},'layout': {},
                                                                                                                         'paint': {
                                                                                                                         'fill-color': '#088',
-                                                                                                                        'fill-opacity': 0.8
+                                                                                                                        'fill-opacity': 0.4
                                                                                                                         }
                                                                                                                         });
 
@@ -2117,7 +2084,7 @@ class Map extends Component {
                                                                                                                         }},'layout': {},
                                                                                                                         'paint': {
                                                                                                                         'fill-color': '#088',
-                                                                                                                        'fill-opacity': 0.8
+                                                                                                                        'fill-opacity': 0.4
                                                                                                                         }
                                                                                                                         });
 
@@ -2171,7 +2138,7 @@ class Map extends Component {
                                                                                                                         }},'layout': {},
                                                                                                                         'paint': {
                                                                                                                         'fill-color': '#088',
-                                                                                                                        'fill-opacity': 0.8
+                                                                                                                        'fill-opacity': 0.4
                                                                                                                         }
                                                                                                                         });
 
@@ -2221,7 +2188,7 @@ class Map extends Component {
                                                                                                                         }},'layout': {},
                                                                                                                         'paint': {
                                                                                                                         'fill-color': '#088',
-                                                                                                                        'fill-opacity': 0.8
+                                                                                                                        'fill-opacity': 0.4
                                                                                                                         }
                                                                                                                         });
 
@@ -2385,15 +2352,85 @@ class Map extends Component {
   render() {
     return (
         <div>
-               <FormControl component="fieldset">
-      <FormLabel component="legend">Options</FormLabel>
-      <RadioGroup defaultValue="female" aria-label="options" name="customized-radios" onChange={(event)=>this._rendermap(event.target.value)}>
-        <FormControlLabel value="Female" control={<StyledRadio />} label="Female" />
-        <FormControlLabel value="Senior Citizen" control={<StyledRadio />} label="Senior citizen" />
-        <FormControlLabel value="Crime Rate" control={<StyledRadio />} label="Crime rate" />
-        <FormControlLabel value="Hospitals" control={<StyledRadio />} label="Hospitals" />
-      </RadioGroup>
-    </FormControl>
+     <center>
+       
+      <div>
+          <AppBar position="static">
+    <Toolbar variant="dense">
+      <IconButton/>
+      <Typography variant="h6" color="inherit">Trans-Bit</Typography>
+    </Toolbar>
+  </AppBar>
+          <center>
+        <FormControl>
+          <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+            Map Style
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-placeholder-label-label"
+            id="demo-simple-select-placeholder-label"
+            onChange={(event)=>{
+              alert(event.target.value)
+              this.setState({mapstyle:event.target.value})
+            }}
+          >
+            <MenuItem value="">
+              <em>Vanilla</em>
+            </MenuItem>
+            <MenuItem value={'vanilla'}>Vanilla</MenuItem>
+            <MenuItem value={'dracula'}>Dracula</MenuItem>
+            <MenuItem value={'custstyle1'}>Custom Style 1</MenuItem>
+            <MenuItem value={'custstyle2'}>Custom Style 2</MenuItem>
+          </Select>
+          <FormHelperText>Select any one map style</FormHelperText>
+        </FormControl>
+       
+      
+      
+        <FormControl>
+          <InputLabel id="demo-simple-select-autowidth-label">Category</InputLabel>
+          <Select
+            labelId="demo-simple-select-autowidth-label"
+            id="demo-simple-select-autowidth"
+            onChange={(event)=>{
+              alert(event.target.value)
+              this.setState({category:event.target.value})
+            }}
+            autoWidth
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value={'senior'}>Senior Citizen</MenuItem>
+            <MenuItem value={'female'}>Female Sensitive</MenuItem>
+            <MenuItem value={'disabled'}>Differentially abled</MenuItem>
+            <MenuItem value={'child'}>Child Sensitive</MenuItem>
+          </Select>
+          <FormHelperText>Select category for better service</FormHelperText>
+        </FormControl>
+        <FormControl >
+          <Select onChange={(event)=>{
+            alert(event.target.value)
+            this.setState({mark:event.target.value})
+          }} displayEmpty>
+            <MenuItem value="" disabled>
+              Mark
+            </MenuItem>
+            <MenuItem value={'poly'}>Block Polygon Regions</MenuItem>
+            <MenuItem value={'ward'}>Wards</MenuItem>
+            <MenuItem value={'route'}>Route</MenuItem>
+            <MenuItem value={'heat'}>Heatmaps</MenuItem>
+            <MenuItem value={'fatal'}>Fatal Spots</MenuItem>
+            <MenuItem value={'dens'}>Traffic Density</MenuItem>
+            <MenuItem value={'sig'}>Signals</MenuItem>
+            <MenuItem value={'net'}>Road Networks</MenuItem>
+            <MenuItem value={'crime'}>Crime polygons</MenuItem>
+            <MenuItem value={'acci'}>Accident polygons</MenuItem>
+          </Select>
+          <FormHelperText>Select a category for better service</FormHelperText>
+        </FormControl>   
+        </center>     
+      </div>
       <ReactMapGL
       ref={(reactMap) => this.reactMap = reactMap}
       mapboxApiAccessToken={"pk.eyJ1IjoibmltaXNoYm9uZ2FsZSIsImEiOiJjazNrOHd5NHgwOHhqM2xwOWk3MjhncndhIn0.QYVzDZcRD_w4d70I5kLUIA"}
@@ -2401,7 +2438,7 @@ class Map extends Component {
         onViewportChange={(viewport) => this.setState({viewport})
     }
     
-    mapStyle={MAP_STYLE}>
+    mapStyle={this.state.mapstyle=='vanilla'?MAP_STYLE:this.state.mapstyle=='dracula'?MAP_STYLE1:this.state.mapstyle=='custstyle1'?MAP_STYLE2:MAP_STYLE3}>
       
       {CITIES.map(this._renderCityMarker)}
       {this._renderPopup()}
@@ -2411,6 +2448,7 @@ class Map extends Component {
           <NavigationControl />
         </div>
     </ReactMapGL>
+    </center>
     <Iframe url="http://www.youtube.com/embed/xDMP3i36naA"
         width="450px"
         height="450px"
