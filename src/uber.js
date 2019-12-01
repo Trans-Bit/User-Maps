@@ -5,6 +5,8 @@ import MAP_STYLE2 from './bright-v9.json'
 import MAP_STYLE3 from './empty-v9.json'
 import ReactMapGL, {Marker, Popup, NavigationControl } from 'react-map-gl';
 import CITIES from './markers.json';
+import HOSPITALS from './hospital.json'
+import WHEELCHAIR from './wheelchair.json'
 import CityInfo from './city-info'
 import CityPin from './city-pin'
 import bartStations from './bart-station.json';
@@ -21,6 +23,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import seniorJSON from './senior.json'
+import femaleJSON from './female.json'
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -43,7 +47,7 @@ class Map extends Component {
         height: 550,
         latitude: 12.974922,
         longitude: 77.57733,  
-        zoom: 10,
+        zoom: 9,
       },
       showm:{disp:'none'},
       mapstyle:"vanilla",
@@ -449,7 +453,7 @@ class Map extends Component {
                             });
 
                             map.addLayer( {
-                                'id': 'nagabhavi',
+                                'id': 'nagarbhavi',
                                 'type': 'fill',
                                 'source': {
                                 'type': 'geojson',
@@ -677,7 +681,7 @@ class Map extends Component {
 
                                             
                                             map.addLayer( {
-                                                'id': 'bannerghata',
+                                                'id': 'bannerghatta',
                                                 'type': 'fill',
                                                 'source': {
                                                 'type': 'geojson',
@@ -849,7 +853,7 @@ class Map extends Component {
                                                         }
                                                         });
                                                         map.addLayer( {
-                                                            'id': 'indiranagara',
+                                                            'id': 'indiranagar',
                                                             'type': 'fill',
                                                             'source': {
                                                             'type': 'geojson',
@@ -1526,7 +1530,7 @@ class Map extends Component {
     
     
                                                                                                         map.addLayer( {
-                                                                                                            'id': 'koramanagala',
+                                                                                                            'id': 'koramangala',
                                                                                                             'type': 'fill',
                                                                                                             'source': {
                                                                                                             'type': 'geojson',
@@ -2272,7 +2276,7 @@ class Map extends Component {
     );
   };
 
-  _rendermap = (info) => {
+  /*_rendermap = (info) => {
     const map = this.reactMap.getMap();
 
     map.removeLayer('jpnagar')
@@ -2328,7 +2332,98 @@ class Map extends Component {
       this.setState({showm:{disp:'block'}})
     alert(info)
 
+  }*/
+
+  _rendermap = (info)=>{
+    const map = this.reactMap.getMap();
+    console.log(info)
+    switch(info){
+   case 'senior':
+     
+    for(var i =0;i<38;i++){
+      map.setPaintProperty(seniorJSON[i]['id'],'fill-opacity',0.4);
+      if(seniorJSON[i]['score']>40)
+    map.setPaintProperty(seniorJSON[i]['id'],'fill-color','#5DFF00');
+    else if(seniorJSON[i]['score']>30)
+    map.setPaintProperty(seniorJSON[i]['id'],'fill-color','#BDFF00');
+    else if(seniorJSON[i]['score']>20)
+    map.setPaintProperty(seniorJSON[i]['id'],'fill-color','#FFFB00');
+    else if(seniorJSON[i]['score']>10)
+    map.setPaintProperty(seniorJSON[i]['id'],'fill-color','#FF7800');
+    else 
+    map.setPaintProperty(seniorJSON[i]['id'],'fill-color','#FF0000');
   }
+  break;
+  case 'female':
+     
+      for(var i =0;i<38;i++){
+        map.setPaintProperty(femaleJSON[i]['id'],'fill-opacity',0.4);
+        if(femaleJSON[i]['score']>40)
+      map.setPaintProperty(femaleJSON[i]['id'],'fill-color','#5DFF00');
+      else if(femaleJSON[i]['score']>30)
+      map.setPaintProperty(femaleJSON[i]['id'],'fill-color','#BDFF00');
+      else if(femaleJSON[i]['score']>20)
+      map.setPaintProperty(femaleJSON[i]['id'],'fill-color','#FFFB00');
+      else if(femaleJSON[i]['score']>10)
+      map.setPaintProperty(femaleJSON[i]['id'],'fill-color','#FF7800');
+      else 
+      map.setPaintProperty(femaleJSON[i]['id'],'fill-color','#FF0000');
+    }
+    break;
+    case 'diffabled':
+       for(var i=0;i<38;i++){
+        map.setPaintProperty(femaleJSON[i]['id'],'fill-opacity',0);
+       }
+       map.addLayer({
+        "id": "route",
+        "type": "line",
+        "source": {
+        "type": "geojson",
+        "data": {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+        "type": "LineString",
+        "coordinates": [
+            [
+              77.66932725906372,
+              12.990162631622217
+            ],
+            [
+              77.66930580139159,
+              12.990852612543895
+            ],
+            [
+              77.66868352890015,
+              12.990842158301806
+            ],
+            [
+              77.6674497127533,
+              12.993277984813618
+            ],
+            [
+              77.6671814918518,
+              12.994271126105149
+            ],
+            [
+              77.66663432121277,
+              12.995588338952796
+            ]
+          ]
+        }
+        }
+        },
+        "layout": {
+        "line-join": "round",
+        "line-cap": "round"
+        },
+        "paint": {
+        "line-color": "#888",
+        "line-width": 8,
+        }
+        });
+  }
+}
 
   _renderPopup() {
     const {popupInfo} = this.state;
@@ -2392,7 +2487,7 @@ class Map extends Component {
             labelId="demo-simple-select-autowidth-label"
             id="demo-simple-select-autowidth"
             onChange={(event)=>{
-              this._rendermap()
+              this._rendermap(event.target.value)
               this.setState({category:event.target.value})
             }}
             autoWidth
@@ -2401,9 +2496,8 @@ class Map extends Component {
               <em>None</em>
             </MenuItem>
             <MenuItem value={'senior'}>Senior Citizen</MenuItem>
-            <MenuItem value={'female'}>Female Sensitive</MenuItem>
-            <MenuItem value={'disabled'}>Differentially abled</MenuItem>
-            <MenuItem value={'child'}>Child Sensitive</MenuItem>
+            <MenuItem value={'female'}>Female/Child</MenuItem>
+            <MenuItem value={'diffabled'}>Differentially abled</MenuItem>
           </Select>
           <FormHelperText>Select category for better service</FormHelperText>
         </FormControl>
@@ -2445,13 +2539,13 @@ class Map extends Component {
     
     mapStyle={this.state.mapstyle=='vanilla'?MAP_STYLE:this.state.mapstyle=='dracula'?MAP_STYLE3:this.state.mapstyle=='custstyle1'?MAP_STYLE1:MAP_STYLE2}>
       
-      {/*CITIES.map(this._renderCityMarker)*/}
+      {CITIES.map(this._renderCityMarker)}
+      {HOSPITALS.map(this._renderCityMarker)}
+      {WHEELCHAIR.map(this._renderCityMarker)} 
+      
       {this._renderPopup()}
       <style>{MARKER_STYLE}</style>
         {bartStations.map(this._renderMarker)}
-        <div style={{position: 'absolute', right: 0}}>
-          <NavigationControl />
-        </div>
     </ReactMapGL>
     </center>
     <Iframe url="http://www.youtube.com/embed/xDMP3i36naA"
