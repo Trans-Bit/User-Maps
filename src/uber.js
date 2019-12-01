@@ -42,12 +42,12 @@ class Map extends Component {
         width: 1200,
         height: 550,
         latitude: 12.974922,
-        longitude: 77.57733,
-        zoom: 9,
+        longitude: 77.57733,  
+        zoom: 10,
       },
       showm:{disp:'none'},
-      mapstyle:"",
-      category:"",
+      mapstyle:"vanilla",
+      category:"poly",
       mark:""
     };
     this.setState=this.setState.bind(this)
@@ -2354,7 +2354,7 @@ class Map extends Component {
         <div>
      <center>
        
-      <div>
+      <div style={{fontAlign:'center'}}>
           <AppBar position="static">
     <Toolbar variant="dense">
       <IconButton/>
@@ -2370,7 +2370,6 @@ class Map extends Component {
             labelId="demo-simple-select-placeholder-label-label"
             id="demo-simple-select-placeholder-label"
             onChange={(event)=>{
-              alert(event.target.value)
               this.setState({mapstyle:event.target.value})
             }}
           >
@@ -2384,7 +2383,7 @@ class Map extends Component {
           </Select>
           <FormHelperText>Select any one map style</FormHelperText>
         </FormControl>
-       
+       &nbsp;&nbsp;&nbsp;
       
       
         <FormControl>
@@ -2393,7 +2392,7 @@ class Map extends Component {
             labelId="demo-simple-select-autowidth-label"
             id="demo-simple-select-autowidth"
             onChange={(event)=>{
-              alert(event.target.value)
+              this._rendermap()
               this.setState({category:event.target.value})
             }}
             autoWidth
@@ -2408,9 +2407,15 @@ class Map extends Component {
           </Select>
           <FormHelperText>Select category for better service</FormHelperText>
         </FormControl>
+
+        &nbsp;&nbsp;&nbsp;
+
         <FormControl >
+        <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+            Select Map Type
+          </InputLabel>
           <Select onChange={(event)=>{
-            alert(event.target.value)
+            
             this.setState({mark:event.target.value})
           }} displayEmpty>
             <MenuItem value="" disabled>
@@ -2438,9 +2443,9 @@ class Map extends Component {
         onViewportChange={(viewport) => this.setState({viewport})
     }
     
-    mapStyle={this.state.mapstyle=='vanilla'?MAP_STYLE:this.state.mapstyle=='dracula'?MAP_STYLE1:this.state.mapstyle=='custstyle1'?MAP_STYLE2:MAP_STYLE3}>
+    mapStyle={this.state.mapstyle=='vanilla'?MAP_STYLE:this.state.mapstyle=='dracula'?MAP_STYLE3:this.state.mapstyle=='custstyle1'?MAP_STYLE1:MAP_STYLE2}>
       
-      {CITIES.map(this._renderCityMarker)}
+      {/*CITIES.map(this._renderCityMarker)*/}
       {this._renderPopup()}
       <style>{MARKER_STYLE}</style>
         {bartStations.map(this._renderMarker)}
